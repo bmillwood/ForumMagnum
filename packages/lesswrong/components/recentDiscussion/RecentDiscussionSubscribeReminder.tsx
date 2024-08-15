@@ -13,7 +13,7 @@ import MailOutline from '@material-ui/icons/MailOutline'
 import CheckRounded from '@material-ui/icons/CheckRounded'
 import withErrorBoundary from '../common/withErrorBoundary'
 import { AnalyticsContext, useTracking } from "../../lib/analyticsEvents";
-import { forumTitleSetting, forumTypeSetting, isAF, isEAForum, isLW, isLWorAF } from '../../lib/instanceSettings';
+import { forumTitleSetting, isAF, isEAForum, isLW, isLWorAF } from '../../lib/instanceSettings';
 import TextField from '@material-ui/core/TextField';
 import { isFriendlyUI } from '../../themes/forumTheme';
 
@@ -149,8 +149,8 @@ const RecentDiscussionSubscribeReminder = ({classes}: {
     }
   }, [adminBranch, currentUser?.isAdmin]);
 
-  // disable on AlignmentForum
-  if (isAF) {
+  // verbiage is all written for EAF or LW
+  if (!isEAForum && !isLW) {
     return null;
   }
 
@@ -345,7 +345,7 @@ const RecentDiscussionSubscribeReminder = ({classes}: {
     // on re-subscribing. A big Subscribe button, which clears the
     // unsubscribe-from-all option, activates curation emails (if not already
     // activated), and sends a confirmation email (if needed).
-    const subscribeTextNode = forumTypeSetting.get() === 'EAForum' ? eaForumSubscribePrompt : (
+    const subscribeTextNode = isEAForum ? eaForumSubscribePrompt : (
       <div className={classes.message}>
         You previously unsubscribed from all emails from LessWrong.
         Re-subscribe to get the best posts emailed to you! {subscriptionDescription}
@@ -368,7 +368,7 @@ const RecentDiscussionSubscribeReminder = ({classes}: {
     // account, but is not subscribed to curated posts. A Subscribe button which
     // sets the subscribe-to-curated option, and (if their email address isn't
     // verified) resends the verification email.
-    const subscribeTextNode = forumTypeSetting.get() === 'EAForum' ? eaForumSubscribePrompt : (
+    const subscribeTextNode = isEAForum ? eaForumSubscribePrompt : (
       <div className={classes.message}>
         Subscribe to get the best of LessWrong emailed to you. {subscriptionDescription}
       </div>
